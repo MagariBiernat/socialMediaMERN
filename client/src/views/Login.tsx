@@ -1,6 +1,9 @@
 import axios from "axios"
 import React, { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
+import { loginUser } from "../redux/actions/authActions"
+import { RootState } from "../redux/reducers/rootReducer"
 
 const Form = styled.form`
   display: flex;
@@ -23,6 +26,8 @@ const initialFormValue = {
 
 function Login() {
   const [formValues, setFormValues] = useState(initialFormValue)
+  const errors = useSelector((state: RootState) => state.errors)
+  const dispatch = useDispatch()
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -33,16 +38,7 @@ function Login() {
   const handleSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault()
 
-    axios
-      .post("/users/login", formValues)
-      .then((response) => {
-        console.log(response)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-
-    console.log(formValues)
+    dispatch(loginUser(formValues))
   }
 
   return (

@@ -1,6 +1,8 @@
 import axios from "axios"
 import React, { FormEventHandler, useRef, useState } from "react"
+import { useDispatch } from "react-redux"
 import styled from "styled-components"
+import { registerUser } from "../redux/actions/authActions"
 
 const Form = styled.form`
   display: flex;
@@ -29,26 +31,27 @@ const initialFormValue = {
 
 function Register() {
   const [formValues, setFormValues] = useState(initialFormValue)
-  console.log(axios.defaults)
-
+  const dispatch = useDispatch()
   const handleFormData = async (event: React.FormEvent) => {
     event.preventDefault()
 
     // axios.get("/users/test").then((response) => console.log(response))
 
-    axios
-      .post("/users/register", formValues)
-      .then((response) => {
-        console.log(response.status)
-        if (response.status === 200) {
-          alert("Account created successfully ")
-        }
-      })
-      .catch((error) => {
-        console.log(error.response)
-      })
+    dispatch(registerUser(formValues))
 
-    console.log(formValues)
+    // axios
+    //   .post("/users/register", formValues)
+    //   .then((response) => {
+    //     console.log(response.status)
+    //     if (response.status === 200) {
+    //       alert("Account created successfully ")
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response)
+    //   })
+
+    // console.log(formValues)
   }
 
   const handleChange = (
