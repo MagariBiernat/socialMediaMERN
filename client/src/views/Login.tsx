@@ -61,12 +61,14 @@ function Login() {
           placeholder="Email ..."
           onChange={handleChange}
         />
+        {errors?.email && <span>You need to fill your email address</span>}
         <input
           name="password"
           type="password"
           onChange={handleChange}
           placeholder="Password ..."
         />
+        {errors?.password && <span>You need to fill your password</span>}
         <input type="submit" value="Log in" />
       </Form>
     </div>

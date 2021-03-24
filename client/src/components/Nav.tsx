@@ -26,8 +26,12 @@ function Nav() {
   return (
     <div>
       <h2>nav</h2>
-      <button onClick={handleRedirectToLogin}>Login</button>
-      <button onClick={handleRedirectToRegister}>Register</button>
+      {!isAuthenticated && (
+        <button onClick={handleRedirectToLogin}>Login</button>
+      )}
+      {!isAuthenticated && (
+        <button onClick={handleRedirectToRegister}>Register</button>
+      )}
       {isAuthenticated && <button onClick={handleLogout}>Log out</button>}
     </div>
   )

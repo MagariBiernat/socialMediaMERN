@@ -31,7 +31,7 @@ const initialFormValue = {
 
 function Register() {
   const [formValues, setFormValues] = useState(initialFormValue)
-  // const errors = useSelector((state: RootState) => state.errors)
+  const errors = useSelector((state: RootState) => state.errors)
   const dispatch = useDispatch()
   const handleFormData = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -54,6 +54,7 @@ function Register() {
           placeholder="First name ..."
           onChange={handleChange}
         />
+        {errors.firstName && <span>You need to fill your first name</span>}
         <input
           name="secondName"
           type="text"
@@ -67,6 +68,7 @@ function Register() {
           placeholder="Last name ..."
           onChange={handleChange}
         />
+        {errors.lastName && <span>You need to fill your last name</span>}
         <select
           onChange={handleChange}
           required
@@ -85,6 +87,7 @@ function Register() {
           type="text"
           placeholder="Email ..."
         />
+        {errors.email && <span>You need to fill your email</span>}
         <input
           required
           onChange={handleChange}
@@ -92,6 +95,7 @@ function Register() {
           type="password"
           placeholder="Password ..."
         />
+        {errors.password && <span>You need to fill your password</span>}
         <input
           required
           onChange={handleChange}
@@ -99,6 +103,7 @@ function Register() {
           type="password"
           placeholder="Confirm password ..."
         />
+        {errors.password2 && <span>You need to confirm your password</span>}
         <input type="submit" value="Sign up" />
       </Form>
     </div>

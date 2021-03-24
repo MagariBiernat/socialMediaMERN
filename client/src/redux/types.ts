@@ -9,13 +9,7 @@ export const USER_LOGOUT = "USER_LOGOUT"
 
 export interface IAuthState {
   isAuthenticated: boolean
-  user: {
-    firstName?: String
-    secondName?: String
-    lastName?: String
-    gender?: String
-    email?: String
-  }
+  user: T_SET_CURRENT_USER
   loading: boolean
 }
 
@@ -24,10 +18,10 @@ export type ERRORS = ErrorsRegisterAndLoginFromServer
 export type T_USER_LOADING = boolean
 
 export type T_SET_CURRENT_USER = {
-  id: String
-  email: String
-  iat: Number
-  exp: Number
+  id?: String
+  email?: String
+  iat?: number
+  exp?: number
 }
 
 export interface ActionType<T> {

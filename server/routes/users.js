@@ -11,11 +11,6 @@ const validateLoginInput = require("../validations/login")
 
 const User = require("../models/User")
 
-router.get("/test", (req, res) => {
-  const message = { message: "hello my friends" }
-  return res.status(200).json(message)
-})
-
 // LOGIN ROUTE
 router.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body)

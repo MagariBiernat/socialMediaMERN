@@ -1,13 +1,9 @@
 import axios from "axios"
 import React from "react"
-import { useSelector } from "react-redux"
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import Nav from "./components/Nav"
+import { userLogout } from "./redux/actions/authActions"
 import { RootState } from "./redux/reducers/rootReducer"
 import AuthRoute from "./utils/authRoute"
 import Login from "./views/Login"
@@ -15,14 +11,20 @@ import Main from "./views/Main"
 import Register from "./views/Register"
 
 function App() {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
   )
+  const dispatch = useDispatch()
 
-  console.log(isAuthenticated)
-  // const [authToken, setAuthToken] = useState(
-  //   localStorage.getItem("token") || ""
-  // )
+  if (isAuthenticated) {
+    if (user.exp) {
+      if (Date.now() > user?.exp * 1000) {
+        dispatch(userLogout())
+      }
+    }
+  } else {
+    dispatch(userLogout())
+  }
   axios.defaults.baseURL = "http://localhost:3000"
   axios.defaults.headers.post["Content-Type"] = "application/json;charset=utf-8"
   axios.defaults.timeout = 3000
