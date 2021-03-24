@@ -1,8 +1,8 @@
-import axios from "axios"
-import React, { FormEventHandler, useRef, useState } from "react"
-import { useDispatch } from "react-redux"
+import React, { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import { registerUser } from "../redux/actions/authActions"
+import { RootState } from "../redux/reducers/rootReducer"
 
 const Form = styled.form`
   display: flex;
@@ -31,27 +31,11 @@ const initialFormValue = {
 
 function Register() {
   const [formValues, setFormValues] = useState(initialFormValue)
+  // const errors = useSelector((state: RootState) => state.errors)
   const dispatch = useDispatch()
   const handleFormData = async (event: React.FormEvent) => {
     event.preventDefault()
-
-    // axios.get("/users/test").then((response) => console.log(response))
-
     dispatch(registerUser(formValues))
-
-    // axios
-    //   .post("/users/register", formValues)
-    //   .then((response) => {
-    //     console.log(response.status)
-    //     if (response.status === 200) {
-    //       alert("Account created successfully ")
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response)
-    //   })
-
-    // console.log(formValues)
   }
 
   const handleChange = (
@@ -95,18 +79,21 @@ function Register() {
           <option value="Apache Helicopter">Apache helicopter</option>
         </select>
         <input
+          required
           onChange={handleChange}
           name="email"
           type="text"
           placeholder="Email ..."
         />
         <input
+          required
           onChange={handleChange}
           name="password"
           type="password"
           placeholder="Password ..."
         />
         <input
+          required
           onChange={handleChange}
           name="password2"
           type="password"

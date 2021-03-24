@@ -28,7 +28,9 @@ router.post("/login", (req, res) => {
 
   User.findOne({ email }).then((user) => {
     if (!user) {
-      return res.status(404).json({ emailnotfound: "Email not found" })
+      return res
+        .status(404)
+        .json({ wrongCredentials: "Email or password incorrect - Email" })
     }
 
     bcrypt.compare(password, user.password).then((isMatch) => {
@@ -52,7 +54,9 @@ router.post("/login", (req, res) => {
           }
         )
       } else {
-        return res.status(400).json({ passwordincorrect: "Password incorrect" })
+        return res
+          .status(400)
+          .json({ wrongCredentials: "Email or password incorrect - Password" })
       }
     })
   })
@@ -66,7 +70,6 @@ router.post("/register", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors)
   }
-  console.log("hey2")
   User.findOne({ email: req.body.email }).then((user) => {
     if (user) {
       return res.status(400).json({ email: "Email already exists" })

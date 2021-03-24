@@ -1,11 +1,25 @@
 import axios from "axios"
 import React from "react"
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { useSelector } from "react-redux"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom"
 import Nav from "./components/Nav"
+import { RootState } from "./redux/reducers/rootReducer"
+import AuthRoute from "./utils/authRoute"
 import Login from "./views/Login"
+import Main from "./views/Main"
 import Register from "./views/Register"
 
 function App() {
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  )
+
+  console.log(isAuthenticated)
   // const [authToken, setAuthToken] = useState(
   //   localStorage.getItem("token") || ""
   // )
@@ -24,8 +38,26 @@ function App() {
         <Route path="/" exact>
           <h2>home </h2>
         </Route>
-        <Route path="/login" exact component={Login} />
-        <Route path="/register" exact component={Register} />
+        <AuthRoute
+          path="/login"
+          authVariant={false}
+          exact
+          Component={Login}
+          isAuthenticated={isAuthenticated}
+        />
+        <AuthRoute
+          path="/register"
+          authVariant={false}
+          exact
+          Component={Register}
+          isAuthenticated={isAuthenticated}
+        />
+        <AuthRoute
+          authVariant={true}
+          path="/app"
+          Component={Main}
+          isAuthenticated={isAuthenticated}
+        />
         {/* <Route path="/app" component={App} /> */}
       </Switch>
     </Router>

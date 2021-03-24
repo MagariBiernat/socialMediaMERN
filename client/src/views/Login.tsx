@@ -1,6 +1,6 @@
-import axios from "axios"
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { Redirect } from "react-router-dom"
 import styled from "styled-components"
 import { loginUser } from "../redux/actions/authActions"
 import { RootState } from "../redux/reducers/rootReducer"
@@ -20,13 +20,17 @@ const Form = styled.form`
 `
 
 const initialFormValue = {
-  email: "",
-  password: "",
+  email: "test1234@gmail.com",
+  password: "test1234",
 }
 
 function Login() {
   const [formValues, setFormValues] = useState(initialFormValue)
   const errors = useSelector((state: RootState) => state.errors)
+  const authenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  )
+
   const dispatch = useDispatch()
 
   const handleChange = (
@@ -37,8 +41,13 @@ function Login() {
 
   const handleSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault()
+    console.log(formValues)
 
     dispatch(loginUser(formValues))
+
+    if (authenticated) {
+      return <Redirect to="/app" />
+    }
   }
 
   return (

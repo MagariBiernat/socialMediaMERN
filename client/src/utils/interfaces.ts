@@ -20,4 +20,5 @@ export interface ErrorsRegisterAndLoginFromServer {
   email?: String
   password?: String
   password2?: String
+  wrongCredentials?: String
 }

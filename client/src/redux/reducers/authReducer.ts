@@ -5,6 +5,7 @@ import {
   T_USER_LOADING,
   T_SET_CURRENT_USER,
   IAuthState,
+  USER_LOGOUT,
 } from "../types"
 
 const isEmpty = require("is-empty")
@@ -31,6 +32,8 @@ const authReducer = (
         ...state,
         loading: action.payload,
       }
+    case USER_LOGOUT:
+      return initialState
     default:
       return state
   }
