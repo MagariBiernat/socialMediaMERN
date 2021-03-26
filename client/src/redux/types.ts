@@ -3,6 +3,8 @@ import { ErrorsRegisterAndLoginFromServer } from "../utils/interfaces"
 // errors types
 
 export const GET_ERRORS = "GET_ERRORS"
+export const EMPTY_ERRORS = "EMPTY_ERRORS"
+export const REGISTERED_SUCCESSFUL = "REGISTERED_SUCCESSFUL"
 export const SET_CURRENT_USER = "SET_CURRENT_USER"
 export const USER_LOADING = "USER_LOADING"
 export const USER_LOGOUT = "USER_LOGOUT"
@@ -11,6 +13,7 @@ export interface IAuthState {
   isAuthenticated: boolean
   user: T_SET_CURRENT_USER
   loading: boolean
+  registered: boolean
 }
 
 export type ERRORS = ErrorsRegisterAndLoginFromServer
@@ -30,5 +33,7 @@ export interface ActionType<T> {
     | typeof SET_CURRENT_USER
     | typeof USER_LOADING
     | typeof USER_LOGOUT
+    | typeof EMPTY_ERRORS
+    | typeof REGISTERED_SUCCESSFUL
   payload?: ERRORS | T_SET_CURRENT_USER | T_USER_LOADING | T
 }

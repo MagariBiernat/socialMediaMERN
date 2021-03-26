@@ -6,6 +6,7 @@ import {
   T_SET_CURRENT_USER,
   IAuthState,
   USER_LOGOUT,
+  REGISTERED_SUCCESSFUL,
 } from "../types"
 
 const isEmpty = require("is-empty")
@@ -14,6 +15,7 @@ const initialState = {
   isAuthenticated: false,
   user: {},
   loading: false,
+  registered: false,
 }
 
 const authReducer = (
@@ -31,6 +33,11 @@ const authReducer = (
       return {
         ...state,
         loading: action.payload,
+      }
+    case REGISTERED_SUCCESSFUL:
+      return {
+        ...state,
+        registered: true,
       }
     case USER_LOGOUT:
       return initialState

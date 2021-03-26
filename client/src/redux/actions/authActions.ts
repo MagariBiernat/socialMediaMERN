@@ -3,7 +3,10 @@ import setAuthToken from "../../utils/setAuthToken"
 import jwtDecode from "jwt-decode"
 import {
   ActionType,
+  EMPTY_ERRORS,
   ERRORS,
+  GET_ERRORS,
+  REGISTERED_SUCCESSFUL,
   SET_CURRENT_USER,
   T_SET_CURRENT_USER,
   T_USER_LOADING,
@@ -22,15 +25,17 @@ export const registerUser = (userData: UserRegisterCredentials) => (
   dispatch: Dispatch<ActionType<ERRORS>>
 ) => {
   try {
-    dispatch({ type: USER_LOADING, payload: true })
+    dispatchLoadingAndEmptyErrors(dispatch)
 
     axios
       .post("/users/register", userData)
       .then((response) => {
-        console.log(response)
+        if (response.status === 200) {
+          dispatch({ type: REGISTERED_SUCCESSFUL })
+        }
       })
       .catch((error) => {
-        console.log(error.response)
+        dispatch({ type: GET_ERRORS, payload: error.response.data })
       })
   } finally {
     dispatch({ type: USER_LOADING, payload: false })
@@ -41,7 +46,7 @@ export const loginUser = (userData: UserLoginCredentials) => (
   dispatch: Dispatch<ActionType<T_USER_LOADING | T_SET_CURRENT_USER>>
 ) => {
   try {
-    dispatch({ type: USER_LOADING, payload: true })
+    dispatchLoadingAndEmptyErrors(dispatch)
 
     axios
       .post("/users/login", userData)
@@ -60,11 +65,18 @@ export const loginUser = (userData: UserLoginCredentials) => (
         dispatch({ type: SET_CURRENT_USER, payload: decoded })
       })
       .catch((error) => {
-        console.log(error, error.response)
+        dispatch({ type: GET_ERRORS, payload: error })
       })
   } finally {
     dispatch({ type: USER_LOADING, payload: false })
   }
+}
+
+const dispatchLoadingAndEmptyErrors = (
+  dispatch: Dispatch<ActionType<T_USER_LOADING | T_SET_CURRENT_USER>>
+) => {
+  dispatch({ type: EMPTY_ERRORS })
+  dispatch({ type: USER_LOADING, payload: true })
 }
 
 export const userLogout = () => (dispatch: Dispatch<ActionType<undefined>>) => {

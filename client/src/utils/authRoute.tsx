@@ -16,7 +16,6 @@ function AuthRoute({
   path,
   authVariant,
 }: IProps) {
-  console.log(isAuthenticated)
   return authVariant ? (
     <Route
       path={path}

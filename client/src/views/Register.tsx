@@ -32,6 +32,10 @@ const initialFormValue = {
 function Register() {
   const [formValues, setFormValues] = useState(initialFormValue)
   const errors = useSelector((state: RootState) => state.errors)
+  // todo: register success -> redirect to login
+  // const registeredSucceeded = useSelector(
+  //   (state: RootState) => state.auth.registered
+  // )
   const dispatch = useDispatch()
   const handleFormData = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -69,6 +73,12 @@ function Register() {
           onChange={handleChange}
         />
         {errors.lastName && <span>You need to fill your last name</span>}
+        <input
+          name="nickname"
+          type="text"
+          placeholder="Nickname ..."
+          onChange={handleChange}
+        />
         <select
           onChange={handleChange}
           required
