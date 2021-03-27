@@ -32,7 +32,7 @@ const initialFormValue = {
 function Register() {
   const [formValues, setFormValues] = useState(initialFormValue)
   const errors = useSelector((state: RootState) => state.errors)
-  // todo: register success -> redirect to login
+  // TODO: register success -> redirect to login
   // const registeredSucceeded = useSelector(
   //   (state: RootState) => state.auth.registered
   // )

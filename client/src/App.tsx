@@ -36,7 +36,7 @@ function App() {
 
         <Switch>
           <Route path="/" exact>
-            <h2>home {isAuthenticated ? "true" : "false"} </h2>
+            <h2>home path = " / " </h2>
           </Route>
           <AuthRoute
             path="/login"

@@ -8,8 +8,39 @@ const SECRET_KEY = process.env.SECRET_KEY
 
 const validateRegisterInput = require("../validations/register")
 const validateLoginInput = require("../validations/login")
+const validateEmail = require("../validations/email")
 
 const User = require("../models/User")
+
+// Get user's data, searching by email
+router.post("/profile", (req, res) => {
+  const { errors, isValid } = validateEmail(req.body)
+
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+  const { email } = req.body
+  console.log(req.body, email)
+  User.find({ email: email }).then((user) => {
+    console.log(user[0])
+    if (user[0]) {
+      console.log("works", user[0].firstName)
+      console.log(typeof user[0].createdAt, user[0].createdAt)
+      const userData = {
+        firstName: user[0].firstName,
+        secondName: user[0].secondName,
+        lastName: user[0].lastName,
+        nickname: user[0].nickname,
+        gender: user[0].gender,
+        email: user[0].email,
+        createdAt: user[0].createdAt,
+      }
+      return res.json(userData)
+    } else {
+      return res.status(400).json({ message: "No email" })
+    }
+  })
+})
 
 // LOGIN ROUTE
 router.post("/login", (req, res) => {

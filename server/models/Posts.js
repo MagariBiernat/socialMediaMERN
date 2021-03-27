@@ -2,6 +2,16 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 // Create User Schema
-const PostsSchema = new Schema({})
+const PostsSchema = new Schema({
+  title: {
+    type: String,
+  },
+  content: { type: String },
+  postedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+  },
+  dateCreated: { type: Date, default: Date.now },
+})
 
-module.exports = User = mongoose.model("posts", PostsSchema)
+module.exports = Post = mongoose.model("posts", PostsSchema)

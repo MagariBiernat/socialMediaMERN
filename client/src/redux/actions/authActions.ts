@@ -72,7 +72,7 @@ export const loginUser = (userData: UserLoginCredentials) => (
   }
 }
 
-const dispatchLoadingAndEmptyErrors = (
+export const dispatchLoadingAndEmptyErrors = (
   dispatch: Dispatch<ActionType<T_USER_LOADING | T_SET_CURRENT_USER>>
 ) => {
   dispatch({ type: EMPTY_ERRORS })

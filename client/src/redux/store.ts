@@ -5,6 +5,7 @@ import rootReducer from "./reducers/rootReducer"
 
 export const localStorageKey = "reduxState"
 
+// TODO: add middleware for jwt auth for actions with posts etc
 const middlewares = [thunk]
 
 const composedEnhancers = composeWithDevTools(applyMiddleware(...middlewares))

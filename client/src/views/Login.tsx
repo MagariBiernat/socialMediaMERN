@@ -41,7 +41,6 @@ function Login() {
 
   const handleSubmitForm = async (event: React.FormEvent) => {
     event.preventDefault()
-    console.log(formValues)
 
     dispatch(loginUser(formValues))
 

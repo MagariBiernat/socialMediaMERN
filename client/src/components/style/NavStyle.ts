@@ -24,19 +24,29 @@ export const NavAuthenticated = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   height: 100%;
   width: 15%;
-  background: #30216e;
+  max-width: 150px;
+  background: #30286e;
   color: white;
+  box-shadow: 1px 2px 7px 2px rgba(0, 0, 0, 0.4);
+
+  > img {
+    width: 100%;
+  }
+
+  > div {
+    width: 100%;
+  }
 
   .menu-element {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    border-top: 1px solid white;
+    height: 40px;
     cursor: pointer;
 
     &:hover {
@@ -44,10 +54,21 @@ export const NavAuthenticated = styled.div`
     }
 
     > * {
+      line-height: 40px;
       height: 100%;
       text-align: center;
-      padding: 5px 10px;
-      font-size: 1.1rem;
+      padding: 2px 6px;
+      font-size: 1rem;
+    }
+
+    > svg {
+      font-size: 1.2rem;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      letter-spacing: 2px;
     }
   }
 `

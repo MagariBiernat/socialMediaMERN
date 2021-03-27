@@ -9,6 +9,19 @@ export const SET_CURRENT_USER = "SET_CURRENT_USER"
 export const USER_LOADING = "USER_LOADING"
 export const USER_LOGOUT = "USER_LOGOUT"
 
+//userReducer
+export const USER_DATA = "USER_DATA"
+
+export interface IUserData {
+  firstName: String
+  secondName?: String
+  lastName: String
+  nickname?: String
+  gender: String
+  email: String
+  createdAt: String
+}
+
 export interface IAuthState {
   isAuthenticated: boolean
   user: T_SET_CURRENT_USER
@@ -35,5 +48,6 @@ export interface ActionType<T> {
     | typeof USER_LOGOUT
     | typeof EMPTY_ERRORS
     | typeof REGISTERED_SUCCESSFUL
-  payload?: ERRORS | T_SET_CURRENT_USER | T_USER_LOADING | T
+    | typeof USER_DATA
+  payload?: ERRORS | T_SET_CURRENT_USER | T_USER_LOADING | IUserData | T
 }
