@@ -1,3 +1,4 @@
+import axios from "axios"
 import React from "react"
 import { useSelector } from "react-redux"
 import { RootState } from "../../redux/reducers/rootReducer"
@@ -12,15 +13,7 @@ function Profile() {
     email,
     createdAt,
   } = useSelector((state: RootState) => state.user)
-  console.log(
-    firstName,
-    secondName,
-    lastName,
-    nickname,
-    gender,
-    email,
-    createdAt
-  )
+
   return (
     <div>
       <h2>This is profile</h2>

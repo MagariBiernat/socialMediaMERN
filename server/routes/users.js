@@ -20,12 +20,8 @@ router.post("/profile", (req, res) => {
     return res.status(400).json(errors)
   }
   const { email } = req.body
-  console.log(req.body, email)
   User.find({ email: email }).then((user) => {
-    console.log(user[0])
     if (user[0]) {
-      console.log("works", user[0].firstName)
-      console.log(typeof user[0].createdAt, user[0].createdAt)
       const userData = {
         firstName: user[0].firstName,
         secondName: user[0].secondName,
@@ -58,6 +54,8 @@ router.post("/login", (req, res) => {
         .status(404)
         .json({ wrongCredentials: "Email or password incorrect - Email" })
     }
+
+    console.log(user)
 
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {

@@ -22,10 +22,12 @@ const UserSchema = new Schema({
   gender: {
     type: String,
     required: true,
+    immutable: true,
   },
   email: {
     type: String,
     required: true,
+    immutable: true,
   },
   password: {
     type: String,
@@ -34,6 +36,7 @@ const UserSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+    immutable: true,
   },
   lastLoggedIn: {
     type: Date,

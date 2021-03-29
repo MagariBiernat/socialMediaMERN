@@ -6,6 +6,7 @@ const bodyParser = require("body-parser")
 const passport = require("passport")
 const cors = require("cors")
 const users = require("./routes/users")
+const posts = require("./routes/posts")
 
 const app = express()
 
@@ -25,14 +26,15 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.error(error))
 
-// Passport middleware
-app.use(passport.initialize())
 // Passport config
 require("./config/passport")(passport)
+// Passport middleware
+app.use(passport.initialize())
 
 // Routes
 
 app.use("/users", users)
+app.use("/posts", passport.authenticate("jwt", { session: false }), posts)
 
 const port = process.env.PORT || 3000
 app.listen(port, () => console.log("Server Started"))

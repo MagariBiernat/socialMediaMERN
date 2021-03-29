@@ -1,12 +1,12 @@
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
-import { AppWrapper } from "./AppStyle"
 import Nav from "./components/Nav"
 import { userLogout } from "./redux/actions/authActions"
 import { RootState } from "./redux/reducers/rootReducer"
 import AuthRoute from "./utils/authRoute"
 import axiosDefaults from "./utils/axiosDefaults"
+import Home from "./views/Home"
 import Login from "./views/Login"
 import Main from "./views/Main"
 import Register from "./views/Register"
@@ -17,6 +17,7 @@ function App() {
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   )
+
   const dispatch = useDispatch()
 
   if (isAuthenticated) {
@@ -31,13 +32,11 @@ function App() {
 
   return (
     <Router>
-      <AppWrapper isAuthenticated={isAuthenticated}>
+      <div className="relative">
         <Nav />
 
         <Switch>
-          <Route path="/" exact>
-            <h2>home path = " / " </h2>
-          </Route>
+          <Route path="/" exact component={Home} />
           <AuthRoute
             path="/login"
             authVariant={false}
@@ -59,7 +58,7 @@ function App() {
             isAuthenticated={isAuthenticated}
           />
         </Switch>
-      </AppWrapper>
+      </div>
     </Router>
   )
 }

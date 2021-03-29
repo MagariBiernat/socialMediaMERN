@@ -7,20 +7,23 @@ const User = mongoose.model("users")
 const SECRET_KEY = process.env.SECRET_KEY
 
 const opts = {}
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt")
 opts.secretOrKey = SECRET_KEY
 
 module.exports = (passport) => {
   passport.use(
     new JwtStrategy(opts, (jwt_payload, done) => {
-      User.findById(jwt_payload.id)
-        .then((user) => {
-          if (user) {
-            return done(null, user)
-          }
+      User.findOne({ _id: jwt_payload.id }, (err, user) => {
+        if (err) {
+          return done(err, false)
+        }
+
+        if (!user) {
           return done(null, false)
-        })
-        .catch((err) => console.log(err))
+        }
+
+        return done(null, user)
+      })
     })
   )
 }
