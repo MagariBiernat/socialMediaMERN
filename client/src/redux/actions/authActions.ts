@@ -52,7 +52,6 @@ export const loginUser = (userData: UserLoginCredentials) => (
       .post("/users/login", userData)
       .then((response) => {
         if (response?.data?.success) {
-          console.log(jwtDecode(response.data.token))
           return response.data.token.split("Bearer ")[1]
         } else {
           throw Error("Error occured")
@@ -65,7 +64,7 @@ export const loginUser = (userData: UserLoginCredentials) => (
         dispatch({ type: SET_CURRENT_USER, payload: decoded })
       })
       .catch((error) => {
-        dispatch({ type: GET_ERRORS, payload: error })
+        dispatch({ type: GET_ERRORS, payload: error.response.data })
       })
   } finally {
     dispatch({ type: USER_LOADING, payload: false })

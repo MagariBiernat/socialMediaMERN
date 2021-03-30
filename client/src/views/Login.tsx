@@ -44,6 +44,11 @@ function Login() {
         className="flex flex-col min-w-200 mt-20 p-10  bg-gray-100"
         onSubmit={handleSubmitForm}
       >
+        {errors?.wrongCredentials && (
+          <span className={SpanErrorClassNames}>
+            Email or password incorrect
+          </span>
+        )}
         <input
           className={InputClassNames}
           required
@@ -53,9 +58,7 @@ function Login() {
           onChange={handleChange}
         />
         {errors?.email && (
-          <span className={SpanErrorClassNames}>
-            You need to fill your email address
-          </span>
+          <span className={SpanErrorClassNames}>Email is invalid</span>
         )}
         <input
           className={InputClassNames}

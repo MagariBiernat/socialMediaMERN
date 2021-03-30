@@ -1,6 +1,18 @@
 import React from "react"
+import { useSelector } from "react-redux"
+import { useHistory } from "react-router-dom"
 import homeHeaderSrc from "../assets/images/homeHeader.png"
+import { RootState } from "../redux/reducers/rootReducer"
 function Home() {
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const history = useHistory()
+  const handleButton = () => {
+    if (isAuthenticated) {
+      history.push("/app")
+    } else {
+      history.push("/register")
+    }
+  }
   return (
     <div className="min-h-full">
       <header className=" w-full min-h-1/2 mt-20">
@@ -8,8 +20,11 @@ function Home() {
           <h1 className="text-3xl tracking-wider font-serif leading-10 pb-10 md:pb-0">
             Introducing, <br /> socialMedia in <br />
             <strong style={{ color: "#0099ff" }}>MERN</strong> Stack <br />
-            <button className="py-3 px-6 w-full mt-5 text-white border-transaprent text-2xl  rounded-md  bg-blue-500 hover:bg-blue-700 shadow-2xl">
-              Sign up
+            <button
+              onClick={handleButton}
+              className="py-3 px-6 w-full mt-5 text-white border-transaprent text-2xl  rounded-md  bg-blue-500 hover:bg-blue-700 shadow-2xl"
+            >
+              {isAuthenticated ? "Go to App" : "Sign up"}
             </button>
           </h1>
           <img
