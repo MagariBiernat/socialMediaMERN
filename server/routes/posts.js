@@ -54,7 +54,7 @@ router.post("/newPost", (req, res) => {
 
           newPost
             .save()
-            .then((post) => res.json({ message: "Success" }))
+            .then(() => res.json({ message: "Success" }))
             .catch((error) => console.log(error))
         }
       })
@@ -66,6 +66,7 @@ router.post("/newPost", (req, res) => {
 // TODO: modify to get 10 next and next...
 router.get("/", (req, res) => {
   Posts.find()
+    .populate("postedBy", "firstName lastName")
     .sort({ dateCreated: "desc" })
     .limit(10)
     .exec((err, posts) => {
@@ -77,11 +78,11 @@ router.get("/", (req, res) => {
     })
 })
 
-router.post("/test", (req, res) => {
-  const auth = req.get("authorization")
-  console.log(auth.split(" ")[1])
-  return res.status(200)
-})
+// router.post("/test", (req, res) => {
+//   const auth = req.get("authorization")
+//   console.log(auth.split(" ")[1])
+//   return res.status(200)
+// })
 
 // UPDATE
 router.post("/update", (req, res) => {
