@@ -1,23 +1,8 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Redirect } from "react-router-dom"
-import styled from "styled-components"
 import { loginUser } from "../redux/actions/authActions"
 import { RootState } from "../redux/reducers/rootReducer"
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  > * {
-    width: 200px;
-    margin-bottom: 15px;
-    padding: 5px;
-    box-shadow: 1px 2px 1px 2px rgba(0, 0, 0, 0.5);
-  }
-`
 
 const initialFormValue = {
   email: "test1234@gmail.com",
@@ -49,27 +34,47 @@ function Login() {
     }
   }
 
+  const InputClassNames = "bg-purple-white shadow rounded border-0 p-3 mb-5"
+  const SpanErrorClassNames = "text-sm my-5 text-red-500"
+
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>Login</h1>
-      <Form onSubmit={handleSubmitForm}>
+    <div className="flex flex-col w-1/2 justify-center items-center m-auto">
+      <h1 className="text-center mt-20 text-5xl">Login</h1>
+      <form
+        className="flex flex-col min-w-200 mt-20 p-10  bg-gray-100"
+        onSubmit={handleSubmitForm}
+      >
         <input
+          className={InputClassNames}
           required
           name="email"
           type="text"
           placeholder="Email ..."
           onChange={handleChange}
         />
-        {errors?.email && <span>You need to fill your email address</span>}
+        {errors?.email && (
+          <span className={SpanErrorClassNames}>
+            You need to fill your email address
+          </span>
+        )}
         <input
+          className={InputClassNames}
           name="password"
           type="password"
           onChange={handleChange}
           placeholder="Password ..."
         />
-        {errors?.password && <span>You need to fill your password</span>}
-        <input type="submit" value="Log in" />
-      </Form>
+        {errors?.password && (
+          <span className={SpanErrorClassNames}>
+            You need to fill your password
+          </span>
+        )}
+        <input
+          className=" py-1 text-lg text-white tracking-wider mt-3 rounded-md shadow-xl cursor-pointer bg-blue-400 hover:bg-blue-500"
+          type="submit"
+          value="Log in"
+        />
+      </form>
     </div>
   )
 }

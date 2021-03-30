@@ -2,18 +2,19 @@ import React from "react"
 import homeHeaderSrc from "../assets/images/homeHeader.png"
 function Home() {
   return (
-    <div className="w-screen min-h-screen">
-      <header className=" w-full min-h-2/5">
+    <div className="min-h-full">
+      <header className=" w-full min-h-1/2 mt-20">
         <div className="flex w-80% justify-evenly items-center flex-col p-5 md:flex-row ">
           <h1 className="text-3xl tracking-wider font-serif leading-10 pb-10 md:pb-0">
             Introducing, <br /> socialMedia in <br />
             <strong style={{ color: "#0099ff" }}>MERN</strong> Stack <br />
-            <button className="py-3 px-6 w-full mt-5 text-white border-transaprent text-2xl  rounded-md  bg-blue-500 hover:bg-blue-700">
+            <button className="py-3 px-6 w-full mt-5 text-white border-transaprent text-2xl  rounded-md  bg-blue-500 hover:bg-blue-700 shadow-2xl">
               Sign up
             </button>
           </h1>
           <img
             style={{ maxWidth: "300px" }}
+            className="shadow"
             src={homeHeaderSrc}
             alt="Header picture :)"
           />
@@ -28,7 +29,7 @@ function Home() {
       </header>
 
       <section
-        className="flex flex-col justify-center items-center p-10 min-h-3/5 text-white"
+        className="flex flex-col h-1/2 justify-center items-center p-10  text-white"
         style={{ backgroundColor: "#0099ff" }}
       >
         <h1 className="text-4xl">Lorem ipsum dolor sit amet.</h1>

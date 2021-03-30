@@ -1,22 +1,7 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import styled from "styled-components"
 import { registerUser } from "../redux/actions/authActions"
 import { RootState } from "../redux/reducers/rootReducer"
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  > * {
-    width: 200px;
-    margin-bottom: 15px;
-    padding: 5px;
-    box-shadow: 1px 2px 1px 2px rgba(0, 0, 0, 0.5);
-  }
-`
 
 const initialFormValue = {
   firstName: "",
@@ -47,39 +32,59 @@ function Register() {
   ) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value })
   }
+
+  const InputClassNames = "bg-purple-white shadow rounded border-0 p-3 mb-5"
+  const SpanErrorClassNames = "text-sm my-5 text-red-500"
+
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>Sign Up</h1>
-      <Form onSubmit={handleFormData}>
+    <div className="flex flex-col w-1/2 justify-center items-center m-auto">
+      <h1 className="text-center mt-20 text-5xl ">Sign Up</h1>
+      <form
+        className="flex flex-col min-w-200 mt-20 p-10  bg-gray-100"
+        onSubmit={handleFormData}
+      >
         <input
+          className={InputClassNames}
           required
           name="firstName"
           type="text"
           placeholder="First name ..."
           onChange={handleChange}
         />
-        {errors.firstName && <span>You need to fill your first name</span>}
+        {errors.firstName && (
+          <span className={SpanErrorClassNames}>
+            You need to fill your first name
+          </span>
+        )}
         <input
+          className={InputClassNames}
           name="secondName"
           type="text"
           onChange={handleChange}
           placeholder="Second name ..."
         />
         <input
+          className={InputClassNames}
           name="lastName"
           required
           type="text"
           placeholder="Last name ..."
           onChange={handleChange}
         />
-        {errors.lastName && <span>You need to fill your last name</span>}
+        {errors.lastName && (
+          <span className={SpanErrorClassNames}>
+            You need to fill your last name
+          </span>
+        )}
         <input
+          className={InputClassNames}
           name="nickname"
           type="text"
           placeholder="Nickname ..."
           onChange={handleChange}
         />
         <select
+          className={InputClassNames}
           onChange={handleChange}
           required
           name="gender"
@@ -91,31 +96,50 @@ function Register() {
           <option value="Apache Helicopter">Apache helicopter</option>
         </select>
         <input
+          className={InputClassNames}
           required
           onChange={handleChange}
           name="email"
           type="text"
           placeholder="Email ..."
         />
-        {errors.email && <span>You need to fill your email</span>}
+        {errors.email && (
+          <span className={SpanErrorClassNames}>
+            You need to fill your email
+          </span>
+        )}
         <input
+          className={InputClassNames}
           required
           onChange={handleChange}
           name="password"
           type="password"
           placeholder="Password ..."
         />
-        {errors.password && <span>You need to fill your password</span>}
+        {errors.password && (
+          <span className={SpanErrorClassNames}>
+            You need to fill your password
+          </span>
+        )}
         <input
+          className={InputClassNames}
           required
           onChange={handleChange}
           name="password2"
           type="password"
           placeholder="Confirm password ..."
         />
-        {errors.password2 && <span>You need to confirm your password</span>}
-        <input type="submit" value="Sign up" />
-      </Form>
+        {errors.password2 && (
+          <span className={SpanErrorClassNames}>
+            You need to confirm your password
+          </span>
+        )}
+        <input
+          className=" py-1 text-lg text-white tracking-wider mt-3 rounded-md shadow-xl cursor-pointer bg-blue-400 hover:bg-blue-500"
+          type="submit"
+          value="Sign up"
+        />
+      </form>
     </div>
   )
 }

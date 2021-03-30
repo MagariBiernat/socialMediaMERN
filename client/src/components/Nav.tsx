@@ -17,7 +17,7 @@ function Nav() {
   return (
     <>
       <nav
-        className="flex justify-between items-center h-16 bg-white text-black relative shadow-sm font-mono p-8 border-b-2 border-black-200"
+        className="flex justify-between items-center h-16 bg-white text-black relative shadow-lg font-mono p-8 border-b-2 border-black-200"
         role="navigation"
       >
         <Link to="/">socialMedia</Link>
