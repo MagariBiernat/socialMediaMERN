@@ -2,11 +2,16 @@ import axios from "axios"
 import React, { useState, useEffect } from "react"
 import { userLogout } from "../../redux/actions/authActions"
 import { BiSave as SaveIcon, BiLike as LikeIcon } from "react-icons/bi"
+import { CgMenuRight as MenuIcon } from "react-icons/cg"
 
 interface IPost {
+  _id: String
   title: String
   content: String
-  postedBy: String
+  postedBy: {
+    firstName: String
+    lastName: String
+  }
   dateCreated: String
   likes: Number
   saved: Number
@@ -24,22 +29,21 @@ function MainHome() {
       .get("/posts/")
       .then((response) => {
         if (response.status === 200) {
+          console.log(response.data)
           setPosts(response.data)
         }
       })
       .catch((err) => console.log(err))
   }
 
-  // const Post: React.FC = () => {
-  //   return (
-  //     <div className="flex flex-col p-2">
-  //       {" "}
-  //       <h2>{item?.title}</h2> <p>{item?.content}</p>{" "}
-  //       <p> by : {item.postedBy}</p> <p>Likes: {item.likes}</p>{" "}
-  //       <p>Saved times :{item.saved}</p>{" "}
-  //     </div>
-  //   )
-  // }
+  const handleDeletePost = (_id: String) => {
+    axios
+      .post("/posts/delete", { postId: _id })
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((err) => console.log(err))
+  }
 
   return (
     <div className="flex flex-col md:flex-row md:justify-between p-8">
@@ -49,7 +53,7 @@ function MainHome() {
         <div>
           {posts.map((item: IPost, index) => (
             <div className="flex flex-col p-2 bg-gray-200 mt-5 shadow-xl rounded-xl">
-              <div className="flex p-2 justify-between">
+              <div className="flex p-2 justify-between items-center">
                 <svg
                   style={{ width: "24px", height: "24px" }}
                   xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +66,14 @@ function MainHome() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <p> by : {item.postedBy}</p>
+                <p className="mx-6 font-bold text-lx">
+                  {item.postedBy.firstName} {item.postedBy.lastName}
+                </p>
+                <MenuIcon
+                  onClick={() => handleDeletePost(item._id)}
+                  className=" ml-4 cursor-pointer"
+                  style={{ height: "24px" }}
+                />
               </div>
               <div className="flex flex-col p-2">
                 <h2 className="text-3xl py-4">{item?.title}</h2>{" "}
@@ -70,12 +81,12 @@ function MainHome() {
               </div>
               <div className="flex flex-row p-2">
                 <div className="flex flex-row mr-10">
-                  <LikeIcon style={{ height: "24px" }} />
-                  <p> : {item.likes}</p>
+                  <LikeIcon style={{ height: "24px" }} className="mr-1" />
+                  <p> {item.likes}</p>
                 </div>
                 <div className="flex flex-row">
-                  <SaveIcon style={{ height: "24px" }} />
-                  <p> : {item.saved}</p>
+                  <SaveIcon style={{ height: "24px" }} className="mr-1" />
+                  <p> {item.saved}</p>
                 </div>
               </div>
             </div>

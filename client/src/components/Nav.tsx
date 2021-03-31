@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../redux/reducers/rootReducer"
 import { userLogout } from "../redux/actions/authActions"
 import { Link } from "react-router-dom"
+import { CgProfile as ProfileIcon } from "react-icons/cg"
+import { IoIosNotificationsOutline as NotifIcon } from "react-icons/io"
+import { IoMailOpenOutline as MailIcon } from "react-icons/io5"
 
 function Nav() {
   const isAuthenticated = useSelector(
@@ -17,10 +20,12 @@ function Nav() {
   return (
     <>
       <nav
-        className="flex justify-between items-center h-16 bg-white text-black relative shadow-lg font-mono p-8 border-b-2 border-black-200"
+        className="flex justify-between items-center h-16 bg-white text-black relative shadow-md font-mono p-8 border-b-1 border-gray-500 "
         role="navigation"
       >
-        <Link to="/">socialMedia</Link>
+        <Link className="font-bold text-blue-700" to="/">
+          socialMedia
+        </Link>
 
         <div className="px-4 cursor-pointer md:hidden">
           <svg
@@ -38,6 +43,16 @@ function Nav() {
             />
           </svg>
         </div>
+
+        {isAuthenticated && (
+          <div className="flex items-center w-2/4 mx-10">
+            <input
+              className="bg-gray-200 rounded-md py-1 pl-2  w-full text-sm focus:border-none"
+              type="search"
+              placeholder="Search people..."
+            />
+          </div>
+        )}
         <div className="md:block hidden">
           {!isAuthenticated ? (
             <>
@@ -48,7 +63,24 @@ function Nav() {
             </>
           ) : (
             <>
-              <button onClick={handleLogout}>Log out</button>
+              <div className="flex flex-row items-center">
+                <button className="mr-10" onClick={handleLogout}>
+                  Log out
+                </button>
+
+                <MailIcon
+                  className="mr-4 cursor-pointer"
+                  style={{ height: "24px", width: "24px" }}
+                />
+                <NotifIcon
+                  className="mr-4 cursor-pointer"
+                  style={{ height: "24px", width: "24px" }}
+                />
+                <ProfileIcon
+                  className="cursor-pointer"
+                  style={{ height: "24px", width: "24px" }}
+                />
+              </div>
             </>
           )}
         </div>

@@ -1,9 +1,10 @@
 require("dotenv").config()
 
+const isEmpty = require("is-empty")
 const express = require("express")
 const router = express.Router()
 const passport = require("passport")
-const validatePostsInput = require("../validations/posts")
+const validatePostsInput = require("../validations/Posts/posts")
 const validateAuthIdAndToken = require("../validations/validateAuth")
 const Posts = require("../models/Posts")
 const User = require("../models/User")
@@ -66,7 +67,7 @@ router.post("/newPost", (req, res) => {
 // TODO: modify to get 10 next and next...
 router.get("/", (req, res) => {
   Posts.find()
-    .populate("postedBy", "firstName lastName")
+    .populate("postedBy", "firstName secondName lastName")
     .sort({ dateCreated: "desc" })
     .limit(10)
     .exec((err, posts) => {
@@ -93,6 +94,20 @@ router.post("/update", (req, res) => {
 
 // DELETE
 router.post("/delete", (req, res) => {
+  const { postId } = req.body
+
+  if (isEmpty(postId)) {
+    return res.status(400).json({ message: "No post's ID specified" })
+  }
+
+  Posts.deleteOne({ _id: postId }, (error) => {
+    if (error) {
+      return res.status(400).json({ message: "Error while deleting a post." })
+    } else {
+      return res.json({ message: "noice" })
+    }
+  })
+
   //data needed :
   // post's id
   // authenticate user, if he is the author of post

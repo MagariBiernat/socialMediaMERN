@@ -32,7 +32,7 @@ function App() {
 
   return (
     <Router>
-      <div className="relative">
+      <div className="relative h-screen">
         <Nav />
 
         <Switch>
