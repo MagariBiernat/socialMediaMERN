@@ -32,7 +32,7 @@ function App() {
 
   return (
     <Router>
-      <div className="relative h-screen">
+      <div className="relative h-screen overflow-y-hidden">
         <Nav />
 
         <Switch>

@@ -24,7 +24,7 @@ function Login() {
     setFormValues({ ...formValues, [e.target.name]: e.target.value })
   }
 
-  const handleSubmitForm = async (event: React.FormEvent) => {
+  const handleSubmitForm = (event: React.FormEvent) => {
     event.preventDefault()
 
     dispatch(loginUser(formValues))

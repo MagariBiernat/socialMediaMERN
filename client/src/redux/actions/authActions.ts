@@ -8,13 +8,13 @@ import {
   GET_ERRORS,
   REGISTERED_SUCCESSFUL,
   SET_CURRENT_USER,
-  T_SET_CURRENT_USER,
-  T_USER_LOADING,
   USER_LOADING,
   USER_LOGOUT,
 } from "../types"
 import { Dispatch } from "redux"
 import {
+  ISET_CURRENT_USER,
+  IUSER_LOADING,
   UserLoginCredentials,
   UserRegisterCredentials,
 } from "../../utils/interfaces"
@@ -32,6 +32,10 @@ export const registerUser = (userData: UserRegisterCredentials) => (
       .then((response) => {
         if (response.status === 200) {
           dispatch({ type: REGISTERED_SUCCESSFUL })
+
+          setTimeout(() => {
+            dispatch({ type: REGISTERED_SUCCESSFUL })
+          }, 500)
         }
       })
       .catch((error) => {
@@ -43,7 +47,7 @@ export const registerUser = (userData: UserRegisterCredentials) => (
 }
 
 export const loginUser = (userData: UserLoginCredentials) => (
-  dispatch: Dispatch<ActionType<T_USER_LOADING | T_SET_CURRENT_USER>>
+  dispatch: Dispatch<ActionType<IUSER_LOADING | ISET_CURRENT_USER>>
 ) => {
   try {
     dispatchLoadingAndEmptyErrors(dispatch)
@@ -60,7 +64,7 @@ export const loginUser = (userData: UserLoginCredentials) => (
       .then((token) => {
         localStorage.setItem(jwtTokenKey, token)
         setAuthToken(token)
-        const decoded: T_SET_CURRENT_USER = jwtDecode(token)
+        const decoded: ISET_CURRENT_USER = jwtDecode(token)
         dispatch({ type: SET_CURRENT_USER, payload: decoded })
       })
       .catch((error) => {
@@ -72,7 +76,7 @@ export const loginUser = (userData: UserLoginCredentials) => (
 }
 
 export const dispatchLoadingAndEmptyErrors = (
-  dispatch: Dispatch<ActionType<T_USER_LOADING | T_SET_CURRENT_USER>>
+  dispatch: Dispatch<ActionType<IUSER_LOADING | ISET_CURRENT_USER>>
 ) => {
   dispatch({ type: EMPTY_ERRORS })
   dispatch({ type: USER_LOADING, payload: true })

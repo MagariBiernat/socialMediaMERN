@@ -20,7 +20,7 @@ function Nav() {
   return (
     <>
       <nav
-        className="flex justify-between items-center h-16 bg-white text-black relative shadow-md font-mono p-8 border-b-1 border-gray-500 "
+        className="flex sticky top-0 justify-between items-center h-16 bg-white text-black relative shadow-md font-mono p-8 border-b-5 border-black "
         role="navigation"
       >
         <Link className="font-bold text-blue-700" to="/">

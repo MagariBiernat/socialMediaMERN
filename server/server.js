@@ -10,9 +10,6 @@ const posts = require("./routes/posts")
 
 const app = express()
 
-// bodyParser middleware in express
-// express >= 4.16.x has bodyparser built in
-// express.urlencoded(), express.json()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors({ credentials: true, origin: true }))
@@ -36,5 +33,5 @@ app.use(passport.initialize())
 app.use("/users", users)
 app.use("/posts", passport.authenticate("jwt", { session: false }), posts)
 
-const port = process.env.PORT || 3000
-app.listen(port, () => console.log("Server Started"))
+const port = process.env.PORT || 3010
+app.listen(port, () => console.log(`Server Started at port ${port}`))

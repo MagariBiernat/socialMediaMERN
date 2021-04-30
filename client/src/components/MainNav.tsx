@@ -10,66 +10,57 @@ import {
   IoMailOpenOutline as MailIcon,
 } from "react-icons/io5"
 import { IoIosNotificationsOutline as NotifIcon } from "react-icons/io"
-import { withRouter } from "react-router"
+import NavElement from "./MainNavComponents/NavElement"
+import { useHistory, useLocation } from "react-router-dom"
 
-function MainNav({ match }: any) {
+function MainNav() {
   const { firstName, lastName } = useSelector((state: RootState) => state.user)
-  const { path } = match
-  console.log(path)
-
-  const childClassNames =
-    "flex flex-row items-center p-2 align-center mainNavChildsElements hover:bg-gray-300 cursor-pointer font-bold"
-  const childClassNamesActive = childClassNames + " text-blue-700"
-  const iconClassNames = "w-1/4 h-1/2"
+  const location = useLocation()
+  const history = useHistory()
 
   return (
-    <div
-      style={{ maxWidth: "200px", maxHeight: "340px" }}
-      className="flex flex-col flex-grow bg-white rounded-xl overflow-hidden shadow-2xl "
-    >
-      <div className={childClassNames + " mainNavChildsProfile"}>
-        <ProfileIcon className={iconClassNames} />
+    <div className="flex flex-col flex-grow bg-white rounded-xl overflow-hidden shadow-2xl minWidth-200 lg:maxWidth-350 lg:maxHeight-300">
+      <div
+        className="flex flex-row items-center p-2 align-center mainNavChildsElements hover:bg-gray-300 cursor-pointer font-bold mainNavChildsProfile"
+        onClick={() => history.push("/app/profile")}
+      >
+        <ProfileIcon className="w-1/4 h-1/2" />
         <p className="">
           {firstName} {lastName}
         </p>
       </div>
-      <div
-        className={path === "/app" ? childClassNamesActive : childClassNames}
-      >
-        <HomeIcon className={iconClassNames} /> <p>Home</p>
-      </div>
-      <div
-        className={
-          path === "/app/explore" ? childClassNamesActive : childClassNames
-        }
-      >
-        <ExploreIcon className={iconClassNames} /> <p>Explore</p>
-      </div>
-      <div
-        className={
-          path === "/app/people" ? childClassNamesActive : childClassNames
-        }
-      >
-        <PeopleIcon className={iconClassNames} /> <p>People</p>
-      </div>
-      <div
-        className={
-          path === "/app/notifications"
-            ? childClassNamesActive
-            : childClassNames
-        }
-      >
-        <NotifIcon className={iconClassNames} /> <p>Notifications</p>
-      </div>
-      <div
-        className={
-          path === "/app/messages" ? childClassNamesActive : childClassNames
-        }
-      >
-        <MailIcon className={iconClassNames} /> <p>Messages</p>{" "}
-      </div>
+      <NavElement
+        Text="Home"
+        Icon={HomeIcon}
+        Path="/app"
+        Match={location.pathname}
+      />
+      <NavElement
+        Text="Explore"
+        Icon={ExploreIcon}
+        Path="/app/explore"
+        Match={location.pathname}
+      />
+      <NavElement
+        Text="People"
+        Icon={PeopleIcon}
+        Path="/app/peolpe"
+        Match={location.pathname}
+      />
+      <NavElement
+        Text="Notifications"
+        Icon={NotifIcon}
+        Path="/app/notifications"
+        Match={location.pathname}
+      />
+      <NavElement
+        Text="Messages"
+        Icon={MailIcon}
+        Path="/app/messages"
+        Match={location.pathname}
+      />
     </div>
   )
 }
 
-export default withRouter(MainNav)
+export default MainNav

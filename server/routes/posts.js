@@ -8,6 +8,7 @@ const validatePostsInput = require("../validations/Posts/posts")
 const validateAuthIdAndToken = require("../validations/validateAuth")
 const Posts = require("../models/Posts")
 const User = require("../models/User")
+const posts = require("../validations/Posts/posts")
 
 // const authorizeMiddleware = () => {
 //   return passport.authenticate("jwt", { session: false })
@@ -66,13 +67,20 @@ router.post("/newPost", (req, res) => {
 // READ - get all posts
 // TODO: modify to get 10 next and next...
 router.get("/", (req, res) => {
+  let countPosts
+  Posts.find({})
+    .countDocuments()
+    .then((count) => {
+      countPosts = count
+    })
   Posts.find()
-    .populate("postedBy", "firstName secondName lastName")
+    .populate("postedBy likedBy", "firstName secondName lastName")
+    // .populate("likedBy", "firstName secondName lastName")
     .sort({ dateCreated: "desc" })
     .limit(10)
     .exec((err, posts) => {
       if (posts) {
-        return res.json(posts)
+        return res.json({ postsCount: countPosts, data: posts })
       } else {
         return res.status(400).json({ message: "No posts available" })
       }
@@ -94,23 +102,129 @@ router.post("/update", (req, res) => {
 
 // DELETE
 router.post("/delete", (req, res) => {
-  const { postId } = req.body
+  const { postId, usersId } = req.body
 
-  if (isEmpty(postId)) {
+  if (isEmpty(postId) || isEmpty(usersId)) {
     return res.status(400).json({ message: "No post's ID specified" })
   }
 
-  Posts.deleteOne({ _id: postId }, (error) => {
-    if (error) {
-      return res.status(400).json({ message: "Error while deleting a post." })
-    } else {
-      return res.json({ message: "noice" })
-    }
-  })
+  if (
+    !validateAuthIdAndToken({
+      token: req.get("authorization").split(" ")[1],
+      postedBy: usersId,
+    })
+  )
+    // Posts.find({postId}).exec( (err, posts) => {
+    //   if(post.postedBy !== req.authorization)
+    // })
 
-  //data needed :
-  // post's id
+    Posts.deleteOne({ _id: postId }, (error) => {
+      if (error) {
+        return res.status(400).json({ message: "Error while deleting a post." })
+      } else {
+        return res.json({ message: "noice" })
+      }
+    })
+
   // authenticate user, if he is the author of post
+})
+
+// Like post
+
+router.post("/likePost", async (req, res) => {
+  const { postId, likedBy } = req.body
+
+  if (isEmpty(postId) || isEmpty(likedBy)) {
+    return res.status(400).json({ message: "No data" })
+  }
+
+  //validate if it's already liked by this User
+  const likePost = async () => {
+    return new Promise((resolve, reject) => {
+      Posts.findOne({ _id: postId }).exec((err, post) => {
+        if (post.likedBy.includes(likedBy)) {
+          reject()
+        } else {
+          resolve()
+        }
+      })
+    })
+  }
+
+  likePost()
+    .then(async () => {
+      const updateLike = Posts.updateOne(
+        { _id: postId },
+        {
+          $push: {
+            likedBy: {
+              $each: [likedBy],
+            },
+          },
+          $inc: {
+            likes: 1,
+          },
+        },
+        {}
+      )
+      const result = await updateLike
+      return result
+    })
+    .then((result) => {
+      if (result) {
+        return res.json({ message: "Success liking" })
+      }
+    })
+    .catch(() => {
+      return res.status(400).json({ message: "Already liked by this user" })
+    })
+})
+
+//unlikePost
+
+router.post("/unlikePost", async (req, res) => {
+  const { postId, likedBy } = req.body
+
+  if (isEmpty(postId) || isEmpty(likedBy)) {
+    return res.status(400).json({ message: "No data" })
+  }
+
+  const disLikePost = () => {
+    return new Promise((resolve, reject) => {
+      Posts.findOne({ _id: postId }).exec((err, post) => {
+        console.log(post.likedBy.includes(likedBy))
+        if (post.likedBy.includes(likedBy)) {
+          resolve()
+        } else {
+          reject()
+        }
+      })
+    })
+  }
+
+  disLikePost()
+    .then(async () => {
+      const result = await Posts.updateOne(
+        { _id: postId },
+        {
+          $inc: {
+            likes: -1,
+          },
+          $pull: {
+            likedBy: likedBy,
+          },
+        }
+      )
+      return result
+    })
+    .then((result) => {
+      if (result) {
+        return res.json({ message: "Success disliking" })
+      }
+    })
+    .catch((error) => {
+      return res.status(400).json({ message: "It is not liked by this user" })
+    })
 })
 
 module.exports = router

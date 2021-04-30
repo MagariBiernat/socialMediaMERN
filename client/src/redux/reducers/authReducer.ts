@@ -1,14 +1,16 @@
 import {
+  IAuthState,
+  IUSER_LOADING,
+  ISET_CURRENT_USER,
+} from "../../utils/interfaces"
+import {
   SET_CURRENT_USER,
   USER_LOADING,
   ActionType,
-  T_USER_LOADING,
-  T_SET_CURRENT_USER,
-  IAuthState,
   USER_LOGOUT,
   REGISTERED_SUCCESSFUL,
 } from "../types"
-
+// import isEmpty from 'is-empty'
 const isEmpty = require("is-empty")
 
 const initialState = {
@@ -20,7 +22,7 @@ const initialState = {
 
 const authReducer = (
   state: IAuthState = initialState,
-  action: ActionType<T_USER_LOADING | T_SET_CURRENT_USER>
+  action: ActionType<IUSER_LOADING | ISET_CURRENT_USER>
 ) => {
   switch (action.type) {
     case SET_CURRENT_USER:
@@ -37,7 +39,7 @@ const authReducer = (
     case REGISTERED_SUCCESSFUL:
       return {
         ...state,
-        registered: true,
+        registered: !state.registered,
       }
     case USER_LOGOUT:
       return initialState

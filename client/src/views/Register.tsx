@@ -1,5 +1,6 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { useHistory } from "react-router-dom"
 import { registerUser } from "../redux/actions/authActions"
 import { RootState } from "../redux/reducers/rootReducer"
 
@@ -18,14 +19,21 @@ function Register() {
   const [formValues, setFormValues] = useState(initialFormValue)
   const errors = useSelector((state: RootState) => state.errors)
   // TODO: register success -> redirect to login
-  // const registeredSucceeded = useSelector(
-  //   (state: RootState) => state.auth.registered
-  // )
+  const registeredSucceeded = useSelector(
+    (state: RootState) => state.auth.registered
+  )
   const dispatch = useDispatch()
+  const history = useHistory()
   const handleFormData = async (event: React.FormEvent) => {
     event.preventDefault()
     dispatch(registerUser(formValues))
   }
+
+  useEffect(() => {
+    if (registeredSucceeded) {
+      history.push("/login")
+    }
+  }, [registeredSucceeded])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

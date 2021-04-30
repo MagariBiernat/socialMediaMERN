@@ -1,12 +1,7 @@
 import axios from "axios"
 import { Dispatch } from "redux"
-import {
-  ActionType,
-  GET_ERRORS,
-  IUserData,
-  USER_DATA,
-  USER_LOADING,
-} from "../types"
+import { IUserData } from "../../utils/interfaces"
+import { ActionType, GET_ERRORS, USER_DATA, USER_LOADING } from "../types"
 import { dispatchLoadingAndEmptyErrors } from "./authActions"
 
 export const getUserData = (email?: String) => (

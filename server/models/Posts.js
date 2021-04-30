@@ -8,7 +8,7 @@ const PostsSchema = new Schema({
     required: true,
     immutable: true,
   },
-  content: { type: String, required: true },
+  content: { type: String, required: false },
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
@@ -19,9 +19,14 @@ const PostsSchema = new Schema({
     type: Number,
     default: 0,
   },
-  saved: {
-    type: Number,
-    default: 0,
+  likedBy: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+    default: [],
   },
   dateCreated: { type: Date, default: Date.now, immutable: true },
   comments: [
@@ -29,6 +34,7 @@ const PostsSchema = new Schema({
       content: { type: String },
       likes: { type: Number },
       commentedBy: mongoose.Schema.Types.ObjectId,
+      likedby: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
     },
   ],
 })

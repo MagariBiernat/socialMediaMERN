@@ -14,7 +14,7 @@ function Home() {
     }
   }
   return (
-    <div className="min-h-full">
+    <div className="overflow-y-auto">
       <header className=" w-full min-h-1/2 mt-20">
         <div className="flex w-80% justify-evenly items-center flex-col p-5 md:flex-row ">
           <h1 className="text-3xl tracking-wider font-serif leading-10 pb-10 md:pb-0">

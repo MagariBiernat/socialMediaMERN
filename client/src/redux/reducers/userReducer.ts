@@ -1,4 +1,5 @@
-import { ActionType, IUserData, USER_DATA } from "../types"
+import { IUserData } from "../../utils/interfaces"
+import { ActionType, USER_DATA } from "../types"
 
 const initialState = {
   firstName: "",
@@ -16,7 +17,6 @@ const userReducer = (
 ) => {
   switch (action.type) {
     case USER_DATA:
-      console.log(action.payload)
       return action.payload
     default:
       return state

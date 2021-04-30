@@ -1,4 +1,11 @@
-import { ErrorsRegisterAndLoginFromServer } from "../utils/interfaces"
+import {
+  ErrorsRegisterAndLoginFromServer,
+  IGetPosts,
+  IPost,
+  ISET_CURRENT_USER,
+  IUserData,
+  IUSER_LOADING,
+} from "../utils/interfaces"
 
 // errors types
 
@@ -12,33 +19,13 @@ export const USER_LOGOUT = "USER_LOGOUT"
 //userReducer
 export const USER_DATA = "USER_DATA"
 
-export interface IUserData {
-  firstName: String
-  secondName?: String
-  lastName: String
-  nickname?: String
-  gender: String
-  email: String
-  createdAt: String
-}
+//postsReducer
 
-export interface IAuthState {
-  isAuthenticated: boolean
-  user: T_SET_CURRENT_USER
-  loading: boolean
-  registered: boolean
-}
+export const GET_POSTS = "GET_POSTS"
+export const GET_MORE_POSTS = "GET_MORE_POSTS"
+export const ADD_NEW_POST = "ADD_NEW_POST"
 
 export type ERRORS = ErrorsRegisterAndLoginFromServer
-
-export type T_USER_LOADING = boolean
-
-export type T_SET_CURRENT_USER = {
-  id?: String
-  email?: String
-  iat?: number
-  exp?: number
-}
 
 export interface ActionType<T> {
   type:
@@ -49,5 +36,15 @@ export interface ActionType<T> {
     | typeof EMPTY_ERRORS
     | typeof REGISTERED_SUCCESSFUL
     | typeof USER_DATA
-  payload?: ERRORS | T_SET_CURRENT_USER | T_USER_LOADING | IUserData | T
+    | typeof GET_POSTS
+    | typeof GET_MORE_POSTS
+    | typeof ADD_NEW_POST
+  payload?:
+    | ERRORS
+    | ISET_CURRENT_USER
+    | IUSER_LOADING
+    | IUserData
+    | IPost
+    | IGetPosts
+    | T
 }
