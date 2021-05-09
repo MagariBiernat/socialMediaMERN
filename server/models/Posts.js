@@ -32,9 +32,19 @@ const PostsSchema = new Schema({
   comments: [
     {
       content: { type: String },
-      likes: { type: Number },
-      commentedBy: mongoose.Schema.Types.ObjectId,
-      likedby: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
+      likes: { type: Number, default: 0 },
+      commentedBy: {
+        type: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+      },
+      likedBy: {
+        type: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+          },
+        ],
+        default: [],
+      },
     },
   ],
 })

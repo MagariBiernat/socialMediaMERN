@@ -1,8 +1,11 @@
 import axios from "axios"
 import React, { useState, useEffect } from "react"
-import { BiSave as SaveIcon } from "react-icons/bi"
 import { FiHeart as LikeIcon } from "react-icons/fi"
-import { CgMenuRight as MenuIcon } from "react-icons/cg"
+import {
+  CgMenuRight as MenuIcon,
+  CgProfile as ProfileIcon,
+} from "react-icons/cg"
+import { FaRegComment as CommentIcon } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux"
 import {
   deletePost,
@@ -11,6 +14,7 @@ import {
 } from "../../redux/actions/postsActions"
 import { RootState } from "../../redux/reducers/rootReducer"
 import { IPost } from "../../utils/interfaces"
+import PostModal from "./PostModal"
 
 interface IProps {
   allPosts: Array<IPost>
@@ -18,6 +22,8 @@ interface IProps {
 
 function MainPosts({ allPosts }: IProps) {
   const { id } = useSelector((state: RootState) => state.auth.user)
+  const [postIdForModal, setPostIdForModal] = useState<string>("")
+  const [modalFullPost, setModalFullPost] = useState<boolean>(false)
   const dispatch = useDispatch()
 
   const handleDeletePost = (postId: string) => {
@@ -33,6 +39,11 @@ function MainPosts({ allPosts }: IProps) {
     }
   }
 
+  const handleShowFullPost = async (postId: string) => {
+    await setPostIdForModal(postId)
+    setModalFullPost(!modalFullPost)
+  }
+
   return (
     <>
       {allPosts.map((item: IPost, index) => (
@@ -42,19 +53,14 @@ function MainPosts({ allPosts }: IProps) {
         >
           <div className="flex p-2 justify-between items-center">
             <div className="flex flex-row align-baseline items-start">
-              <svg
-                style={{ width: "26px", height: "26px" }}
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="1 1 20 20"
-                fill="#2132dd"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <p className="mx-6 font-bold text-md">
+              <ProfileIcon
+                style={{
+                  height: "28px",
+                  width: "32px",
+                }}
+                className=" cursor-pointer "
+              />
+              <p className="mx-6 font-bold text-lg">
                 {item.postedBy.firstName} {item.postedBy.lastName}
               </p>
             </div>
@@ -68,29 +74,60 @@ function MainPosts({ allPosts }: IProps) {
             <h2 className="text-xl py-4">{item?.title}</h2>{" "}
             <p>{item?.content}</p>
           </div>
-          <div className="flex flex-row p-2 pt-4 mt-6 border-t-2">
-            <div className="flex flex-row  pb-1 items-center">
-              <LikeIcon
-                style={{
-                  height: "28px",
-                  width: "24px",
-                  fill:
-                    item.likedBy.filter((item) => item._id === id).length > 0
-                      ? "red"
-                      : "",
-                  color:
-                    item.likedBy.filter((item) => item._id === id).length > 0
-                      ? "red"
-                      : "inherit",
-                }}
-                className="mr-1 cursor-pointer"
-                onClick={() => handleLikePost(item)}
-              />
-              <p className="text-xl ml-2 font"> {item.likes}</p>
+          <div className="flex flex-row justify-between p-2 pt-4 mt-6 border-t-2">
+            <div className="flex flex-row ">
+              <div
+                className="flex flex-row  pb-1 items-center "
+                style={{ minWidth: "100px" }}
+              >
+                <LikeIcon
+                  style={{
+                    height: "28px",
+                    width: "24px",
+                    fill:
+                      item.likedBy.filter((item) => item._id === id).length > 0
+                        ? "red"
+                        : "",
+                    color:
+                      item.likedBy.filter((item) => item._id === id).length > 0
+                        ? "red"
+                        : "inherit",
+                  }}
+                  className="mr-1 cursor-pointer"
+                  onClick={() => handleLikePost(item)}
+                />
+                <p className="text-xl ml-2 font"> {item.likes}</p>
+              </div>
+              <div className="flex flex-row  pb-1 items-center">
+                <CommentIcon
+                  style={{
+                    height: "28px",
+                    width: "24px",
+                  }}
+                  className="mr-1 cursor-pointer"
+                  onClick={() => handleShowFullPost(item._id)}
+                />
+                <p className="text-xl ml-2 font"> {item.comments.length}</p>
+              </div>
+            </div>
+            <div
+              className="mr-4 cursor-pointer"
+              onClick={() => handleShowFullPost(item._id)}
+            >
+              <p>See full post</p>
             </div>
           </div>
         </div>
       ))}
+      {postIdForModal.length > 0 && (
+        <PostModal
+          handleClose={() => setModalFullPost(!modalFullPost)}
+          show={modalFullPost}
+          usersId={id ? id : ""}
+          postId={postIdForModal}
+          handleLikePost={handleLikePost}
+        />
+      )}
     </>
   )
 }

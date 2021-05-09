@@ -75,7 +75,6 @@ router.get("/", (req, res) => {
     })
   Posts.find()
     .populate("postedBy likedBy", "firstName secondName lastName")
-    // .populate("likedBy", "firstName secondName lastName")
     .sort({ dateCreated: "desc" })
     .limit(10)
     .exec((err, posts) => {
@@ -113,18 +112,20 @@ router.post("/delete", (req, res) => {
       token: req.get("authorization").split(" ")[1],
       postedBy: usersId,
     })
-  )
-    // Posts.find({postId}).exec( (err, posts) => {
-    //   if(post.postedBy !== req.authorization)
-    // })
+  ) {
+    return res.status(400).json({ message: "A problem has occurred" })
+  }
+  // Posts.find({postId}).exec( (err, posts) => {
+  //   if(post.postedBy !== req.authorization)
+  // })
 
-    Posts.deleteOne({ _id: postId }, (error) => {
-      if (error) {
-        return res.status(400).json({ message: "Error while deleting a post." })
-      } else {
-        return res.json({ message: "noice" })
-      }
-    })
+  Posts.deleteOne({ _id: postId }, (error) => {
+    if (error) {
+      return res.status(400).json({ message: "Error while deleting a post." })
+    } else {
+      return res.json({ message: "noice" })
+    }
+  })
 
   // authenticate user, if he is the author of post
 })
@@ -136,6 +137,15 @@ router.post("/likePost", async (req, res) => {
 
   if (isEmpty(postId) || isEmpty(likedBy)) {
     return res.status(400).json({ message: "No data" })
+  }
+
+  if (
+    !validateAuthIdAndToken({
+      token: req.get("authorization").split(" ")[1],
+      postedBy: likedBy,
+    })
+  ) {
+    return res.status(400).json({ message: "A problem has occurred" })
   }
 
   //validate if it's already liked by this User
@@ -181,12 +191,20 @@ router.post("/likePost", async (req, res) => {
 })
 
 //unlikePost
-
 router.post("/unlikePost", async (req, res) => {
   const { postId, likedBy } = req.body
 
   if (isEmpty(postId) || isEmpty(likedBy)) {
     return res.status(400).json({ message: "No data" })
+  }
+
+  if (
+    !validateAuthIdAndToken({
+      token: req.get("authorization").split(" ")[1],
+      postedBy: likedBy,
+    })
+  ) {
+    return res.status(400).json({ message: "A problem has occurred" })
   }
 
   const disLikePost = () => {
@@ -225,6 +243,29 @@ router.post("/unlikePost", async (req, res) => {
     .catch((error) => {
       return res.status(400).json({ message: "It is not liked by this user" })
     })
+})
+
+// comments
+// comments
+// comments
+
+// add comment
+
+router.post("/comments", async (req, res) => {
+  const { commentContent, commentedBy, postId } = req.body
+
+  if (isEmpty(commentContent) || isEmpty(postId) || isEmpty(likedBy)) {
+    return res.status(400).json({ message: "No data" })
+  }
+
+  if (
+    !validateAuthIdAndToken({
+      token: req.get("authorization").split(" ")[1],
+      postedBy: commentedBy,
+    })
+  ) {
+    return res.status(400).json({ message: "A problem has occurred" })
+  }
 })
 
 module.exports = router

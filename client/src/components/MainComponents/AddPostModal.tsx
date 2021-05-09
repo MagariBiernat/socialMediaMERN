@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { newPost } from "../../redux/actions/postsActions"
 import { INewPost } from "../../utils/interfaces"
@@ -12,7 +12,23 @@ interface IProps {
 const AddPostModal: React.FC<IProps> = ({ handleClose, show, id }: IProps) => {
   const [title, setTitle] = useState<string>("")
   const [content, setContent] = useState<string>("")
+  const overlayRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    document.addEventListener("click", handleCloseOverlay, false)
+
+    return () => {
+      document.removeEventListener("click", handleCloseOverlay, false)
+    }
+  })
+
+  const handleCloseOverlay = (event: any) => {
+    const overlay = overlayRef.current
+    if (overlay === event.target) {
+      handleClose()
+    }
+  }
 
   const handleSubmitForm = (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,7 +49,7 @@ const AddPostModal: React.FC<IProps> = ({ handleClose, show, id }: IProps) => {
 
   const showHideClassName = show ? "modal block  " : "modal hidden"
   return (
-    <div className={showHideClassName}>
+    <div ref={overlayRef} className={showHideClassName}>
       <section className="modal-main flex flex-col rounded-2xl ">
         <header className="flex flex-row justify-between items-center p-6 border-b-2 bg-blue-500 rounded-t-xl">
           <h1 className="text-white text-xl font-bold">Add a new post</h1>

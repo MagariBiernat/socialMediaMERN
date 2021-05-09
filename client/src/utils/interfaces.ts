@@ -42,12 +42,12 @@ export interface IComments {
     lastName: string
     _id: string
   }
-  likedby: {
+  likedBy: Array<{
     firstName: string
     secondName: string
     lastName: string
     _id: string
-  }
+  }>
 }
 
 export interface ILikedPost {
