@@ -5,7 +5,7 @@ const express = require("express")
 const router = express.Router()
 const passport = require("passport")
 const validatePostsInput = require("../validations/Posts/posts")
-const validateAuthIdAndTokenAndIfUserExists = require("../validations/validateAuthAndUser")
+const validateAuth = require("../validations/validateAuth")
 const Posts = require("../models/Posts")
 const User = require("../models/User")
 const posts = require("../validations/Posts/posts")
@@ -25,7 +25,7 @@ router.post("/newPost", (req, res) => {
   const { title, content, postedBy } = req.body
 
   if (
-    !validateAuthIdAndTokenAndIfUserExists({
+    !validateAuth({
       token: req.get("authorization").split(" ")[1],
       postedBy: postedBy,
     })
@@ -102,7 +102,7 @@ router.post("/delete", (req, res) => {
   }
 
   if (
-    !validateAuthIdAndTokenAndIfUserExists({
+    !validateAuth({
       token: req.get("authorization").split(" ")[1],
       postedBy: usersId,
     })
@@ -134,7 +134,7 @@ router.post("/likePost", async (req, res) => {
   }
 
   if (
-    !validateAuthIdAndTokenAndIfUserExists({
+    !validateAuth({
       token: req.get("authorization").split(" ")[1],
       postedBy: likedBy,
     })
@@ -193,7 +193,7 @@ router.post("/unlikePost", async (req, res) => {
   }
 
   if (
-    !validateAuthIdAndTokenAndIfUserExists({
+    !validateAuth({
       token: req.get("authorization").split(" ")[1],
       postedBy: likedBy,
     })
@@ -253,7 +253,7 @@ router.post("/comments/addComment", async (req, res) => {
   }
 
   if (
-    !validateAuthIdAndTokenAndIfUserExists({
+    !validateAuth({
       token: req.get("authorization").split(" ")[1],
       postedBy: commentedBy,
     })
@@ -300,6 +300,45 @@ router.post("/comments/addComment", async (req, res) => {
 })
 
 // like comment
+
+router.post("/comments/likeComment", async (req, res) => {
+  // kto lajkuje, jaki post, ktory komentarz
+  const { usersId, postId, commentId } = req.body
+
+  if (isEmpty(usersId) || isEmpty(postId) || isEmpty(commentId)) {
+    return res.status(400).json({ message: "No data" })
+  }
+
+  if (
+    !validateAuth({
+      token: req.get("authorization").split(" ")[1],
+      postedBy: usersId,
+    })
+  ) {
+    return res.status(400).json({ message: "A problem has occurred" })
+  } else {
+    new Promise((resolve, reject) => {
+      //sprawdzic czy nie jest juz zalajkowany
+      //jesli nie to zalajkowac, else error
+
+      Posts.findOne({ _id: postId }).exec((err, post) => {
+        const comment = post.comments.filter(
+          (comment) => comment._id === commentId
+        )
+        if (comment.length === 1) {
+          resolve(post)
+        }
+      })
+    })
+      .then((post) =>
+        post.comments.updateOne({ _id: commentId }, { $inc: { likes: 1 } })
+      )
+      .then((response) => {
+        console.log(respones)
+      })
+      .catch((error) => console.log(error))
+  }
+})
 
 // dislike comment
 
