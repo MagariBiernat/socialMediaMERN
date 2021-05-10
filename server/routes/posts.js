@@ -5,7 +5,7 @@ const express = require("express")
 const router = express.Router()
 const passport = require("passport")
 const validatePostsInput = require("../validations/Posts/posts")
-const validateAuthIdAndToken = require("../validations/validateAuth")
+const validateAuthIdAndTokenAndIfUserExists = require("../validations/validateAuthAndUser")
 const Posts = require("../models/Posts")
 const User = require("../models/User")
 const posts = require("../validations/Posts/posts")
@@ -25,7 +25,7 @@ router.post("/newPost", (req, res) => {
   const { title, content, postedBy } = req.body
 
   if (
-    !validateAuthIdAndToken({
+    !validateAuthIdAndTokenAndIfUserExists({
       token: req.get("authorization").split(" ")[1],
       postedBy: postedBy,
     })
@@ -35,31 +35,25 @@ router.post("/newPost", (req, res) => {
 
   //Validate if user's ID is in DB
 
-  User.findOne({ _id: postedBy }).then((User) => {
-    if (!User) {
-      return res.status(400).json({ message: "User's ID not in DB" })
+  Posts.findOne({
+    title: title,
+    content: content,
+    postedBy: postedBy,
+    createdAt: Date.now,
+  }).then((Post) => {
+    if (Post) {
+      return res.status(400).json({ message: "No duplicate posts" })
     } else {
-      Posts.findOne({
+      const newPost = new Posts({
         title: title,
         content: content,
         postedBy: postedBy,
-        createdAt: Date.now,
-      }).then((Post) => {
-        if (Post) {
-          return res.status(400).json({ message: "No duplicate posts" })
-        } else {
-          const newPost = new Posts({
-            title: title,
-            content: content,
-            postedBy: postedBy,
-          })
-
-          newPost
-            .save()
-            .then(() => res.json({ message: "Success" }))
-            .catch((error) => console.log(error))
-        }
       })
+
+      newPost
+        .save()
+        .then(() => res.json({ message: "Success" }))
+        .catch((error) => console.log(error))
     }
   })
 })
@@ -108,7 +102,7 @@ router.post("/delete", (req, res) => {
   }
 
   if (
-    !validateAuthIdAndToken({
+    !validateAuthIdAndTokenAndIfUserExists({
       token: req.get("authorization").split(" ")[1],
       postedBy: usersId,
     })
@@ -140,7 +134,7 @@ router.post("/likePost", async (req, res) => {
   }
 
   if (
-    !validateAuthIdAndToken({
+    !validateAuthIdAndTokenAndIfUserExists({
       token: req.get("authorization").split(" ")[1],
       postedBy: likedBy,
     })
@@ -199,7 +193,7 @@ router.post("/unlikePost", async (req, res) => {
   }
 
   if (
-    !validateAuthIdAndToken({
+    !validateAuthIdAndTokenAndIfUserExists({
       token: req.get("authorization").split(" ")[1],
       postedBy: likedBy,
     })
@@ -251,21 +245,64 @@ router.post("/unlikePost", async (req, res) => {
 
 // add comment
 
-router.post("/comments", async (req, res) => {
+router.post("/comments/addComment", async (req, res) => {
   const { commentContent, commentedBy, postId } = req.body
 
-  if (isEmpty(commentContent) || isEmpty(postId) || isEmpty(likedBy)) {
+  if (isEmpty(commentContent) || isEmpty(commentedBy) || isEmpty(postId)) {
     return res.status(400).json({ message: "No data" })
   }
 
   if (
-    !validateAuthIdAndToken({
+    !validateAuthIdAndTokenAndIfUserExists({
       token: req.get("authorization").split(" ")[1],
       postedBy: commentedBy,
     })
   ) {
     return res.status(400).json({ message: "A problem has occurred" })
   }
+
+  await Posts.findOne({ _id: postId })
+    .then(async (Post) => {
+      if (Post) {
+        const allComments = Post.comments
+
+        const allCommentsSameUser = allComments.filter(
+          (comment) => comment.commentedBy.toString() === commentedBy.toString()
+        )
+
+        if (
+          allCommentsSameUser.filter(
+            (comment) => comment.dateCreated > Date.now() - 30000
+          ).length > 0
+        ) {
+          return res.status(400).json({
+            message: "You need to wait 30 seconds before next comment",
+          })
+        } else {
+          const newComment = {
+            content: commentContent,
+            commentedBy,
+          }
+          const updateComments = await Posts.updateOne(
+            { _id: postId },
+            { $push: { comments: { $each: [newComment] } } }
+          )
+
+          if (updateComments) {
+            return res.json({ message: "success commenting" })
+          }
+        }
+      }
+    })
+    .catch((error) => {
+      return res.status(401).json({ message: "A problem has occurred" })
+    })
 })
+
+// like comment
+
+// dislike comment
+
+// delete comment
 
 module.exports = router

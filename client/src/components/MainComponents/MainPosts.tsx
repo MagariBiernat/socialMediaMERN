@@ -70,6 +70,7 @@ function MainPosts({ allPosts }: IProps) {
               style={{ height: "24px" }}
             />
           </div>
+
           <div className="flex flex-col p-2">
             <h2 className="text-xl py-4">{item?.title}</h2>{" "}
             <p>{item?.content}</p>

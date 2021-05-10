@@ -17,11 +17,29 @@ const AddPostModal: React.FC<IProps> = ({ handleClose, show, id }: IProps) => {
 
   useEffect(() => {
     document.addEventListener("click", handleCloseOverlay, false)
+    document.addEventListener(
+      "keydown",
+      handleCloseOverlayOnEscapePressed,
+      false
+    )
 
     return () => {
       document.removeEventListener("click", handleCloseOverlay, false)
+      document.removeEventListener(
+        "keydown",
+        handleCloseOverlayOnEscapePressed,
+        false
+      )
     }
   })
+
+  const handleCloseOverlayOnEscapePressed = (event: any) => {
+    if (show) {
+      if (event.keyCode === 27) {
+        handleClose()
+      }
+    }
+  }
 
   const handleCloseOverlay = (event: any) => {
     const overlay = overlayRef.current
