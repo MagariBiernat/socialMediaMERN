@@ -6,6 +6,7 @@ import { CgProfile as ProfileIcon } from "react-icons/cg"
 import { FaRegComment as CommentIcon } from "react-icons/fa"
 import { IComments, IPost } from "../../utils/interfaces"
 import axios from "axios"
+import PostModalComments from "./PostModalComments"
 
 interface IProps {
   handleClose: () => void
@@ -24,7 +25,9 @@ const PostModal: React.FC<IProps> = ({
 }) => {
   const [newCommentValue, setNewCommentValue] = useState<string>("")
   const overlayRef = useRef<HTMLDivElement>(null)
-  const showHideClassName = show ? "modal block" : "modal hidden"
+  const showHideClassName = show
+    ? "modal block overflow-hidden"
+    : "modal hidden"
   const post = useSelector((state: RootState) =>
     state.posts.posts.data.filter((post) => post._id === postId).length > 0
       ? state.posts.posts.data.filter((post) => post._id === postId)[0]
@@ -159,9 +162,14 @@ const PostModal: React.FC<IProps> = ({
               </div>
             </div>
             {post?.comments?.length > 0 ? (
-              <div className="flex flex-col">
+              <div className="flex flex-col h-50 overhlow-y-auto hideScrollBar">
                 {post?.comments?.map((comment: IComments) => (
-                  <div> {comment.content}</div>
+                  <PostModalComments
+                    comment={comment}
+                    ProfileIcon={ProfileIcon}
+                    LikeIcon={LikeIcon}
+                    usersId={usersId}
+                  />
                 ))}
               </div>
             ) : (

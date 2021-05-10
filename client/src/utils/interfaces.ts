@@ -34,6 +34,7 @@ export interface ErrorsRegisterAndLoginFromServer {
 }
 
 export interface IComments {
+  _id: string
   content: string
   likes: number
   commentedBy: {
@@ -48,6 +49,7 @@ export interface IComments {
     lastName: string
     _id: string
   }>
+  dateCreated: string
 }
 
 export interface ILikedPost {

@@ -61,6 +61,7 @@ router.post("/newPost", (req, res) => {
 // READ - get all posts
 // TODO: modify to get 10 next and next...
 router.get("/", (req, res) => {
+  Posts.deleteMany({})
   let countPosts
   Posts.find({})
     .countDocuments()
@@ -68,11 +69,31 @@ router.get("/", (req, res) => {
       countPosts = count
     })
   Posts.find()
-    .populate("postedBy likedBy", "firstName secondName lastName")
+    .populate([
+      {
+        path: "postedBy",
+        model: "users",
+      },
+      {
+        path: "likedBy",
+        model: "users",
+      },
+      {
+        path: "comments",
+        populate: { path: "commentedBy", model: "users" },
+      },
+    ])
+    // .populate("postedBy likedBy", "firstName secondName lastName")
+    // .populate({
+    //   path: "comments",
+    //   populate: { path: "commentedBy", model: "users" },
+    // })
     .sort({ dateCreated: "desc" })
     .limit(10)
     .exec((err, posts) => {
+      if (err) console.log(err)
       if (posts) {
+        console.log(posts[0])
         return res.json({ postsCount: countPosts, data: posts })
       } else {
         return res.status(400).json({ message: "No posts available" })
@@ -318,9 +339,6 @@ router.post("/comments/likeComment", async (req, res) => {
     return res.status(400).json({ message: "A problem has occurred" })
   } else {
     new Promise((resolve, reject) => {
-      //sprawdzic czy nie jest juz zalajkowany
-      //jesli nie to zalajkowac, else error
-
       Posts.findOne({ _id: postId }).exec((err, post) => {
         const comment = post.comments.filter(
           (comment) => comment._id === commentId
@@ -328,6 +346,8 @@ router.post("/comments/likeComment", async (req, res) => {
         if (comment.length === 1) {
           resolve(post)
         }
+
+        reject(`${comment.length} --- error occured`)
       })
     })
       .then((post) =>
